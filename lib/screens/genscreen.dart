@@ -110,7 +110,7 @@ class _genscreenState extends State<genscreen> {
     );
 
     return Scaffold(
-      body: Stack(
+      body: qustions.isEmpty ? Center(child : CircularProgressIndicator() ):Stack(
 
           children: <Widget>[
             Column(
@@ -154,7 +154,7 @@ class _genscreenState extends State<genscreen> {
                               ],
                             ),
                             child: Center(child : Text("${qustions[qindex]["qstring"]}" , style:
-                            TextStyle(fontSize: MediaQuery.of(context).size.width / 20  ,fontWeight: FontWeight.bold ,color: Colors.white ),textAlign: TextAlign.center,),
+                            TextStyle(fontSize:  20  ,fontWeight: FontWeight.bold ,color: Colors.white ),textAlign: TextAlign.center,),
                             ),
                           )
                         ],
@@ -199,7 +199,7 @@ class _genscreenState extends State<genscreen> {
                           ],
                         ),
                         child: Center(child : Text("${qustions[qindex]["qstring"]}" , style:
-                        TextStyle(fontSize: MediaQuery.of(context).size.width / 20 ,fontWeight: FontWeight.bold ,color: Colors.white ),textAlign: TextAlign.center,),
+                        TextStyle(fontSize:  20 ,fontWeight: FontWeight.bold ,color: Colors.white ),textAlign: TextAlign.center,),
                         ),
                       )
 

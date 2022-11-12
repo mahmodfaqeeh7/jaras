@@ -141,8 +141,8 @@ class _StartscreenState extends State<Startscreen> {
                     },
                     child: Column(children: [
                       Image.asset("assets/images/histvector.png",
-                        height: MediaQuery.of(context).size.width * 0.4
-                        ,width: MediaQuery.of(context).size.width * 0.4,),
+                        height: MediaQuery.of(context).size.width * 0.35
+                        ,width: MediaQuery.of(context).size.width * 0.35,),
                       Center(child :Text("تحدي التاريخ" , style:
                       TextStyle(fontSize: 20 ,fontWeight: FontWeight.bold ,color: Colors.white ),
                         textAlign: TextAlign.center,),)
@@ -160,8 +160,8 @@ class _StartscreenState extends State<Startscreen> {
                     },
                     child: Column(children: [
                       Image.asset("assets/images/footvector.png",
-                        height: MediaQuery.of(context).size.width * 0.5
-                        ,width: MediaQuery.of(context).size.width * 0.5,),
+                        height: MediaQuery.of(context).size.width * 0.35
+                        ,width: MediaQuery.of(context).size.width * 0.35,),
                       Center(child :Text("تحدي كرة القدم" , style:
                       TextStyle(fontSize: 20 ,fontWeight: FontWeight.bold ,color: Colors.white ),
                         textAlign: TextAlign.center,),)
@@ -179,9 +179,9 @@ class _StartscreenState extends State<Startscreen> {
                     },
                     child:  Column(children: [
                       Image.asset("assets/images/filmvector.png",
-                        height: MediaQuery.of(context).size.width * 0.5
-                        ,width: MediaQuery.of(context).size.width * 0.5,),
-                      Center(child :Text("تحدي الأفلام" , style:
+                        height: MediaQuery.of(context).size.width * 0.35
+                        ,width: MediaQuery.of(context).size.width * 0.35,),
+                      Center(child :Text("تحدي المعلومات العامة" , style:
                       TextStyle(fontSize: 20 ,fontWeight: FontWeight.bold ,color: Colors.white ),
                         textAlign: TextAlign.center,),)
                     ],)

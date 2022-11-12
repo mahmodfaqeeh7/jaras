@@ -18,11 +18,12 @@ class _ButtonsscreenState extends State<Buttonsscreen> {
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('assets/jas.json');
     final data = await json.decode(response);
-    setState(() {
-      qustions = data["qustions"];
-      qustions.shuffle();
 
-    });
+         setState(() {
+           qustions = data["foot"];
+           qustions.shuffle();
+         });
+
   }
 
   @override
@@ -110,7 +111,9 @@ class _ButtonsscreenState extends State<Buttonsscreen> {
     );
 
     return Scaffold(
-      body: Stack(
+       body: qustions.isEmpty ? Center(child : CircularProgressIndicator() ):
+
+       Stack(
 
           children: <Widget>[
             Column(
@@ -154,7 +157,7 @@ class _ButtonsscreenState extends State<Buttonsscreen> {
                               ],
                             ),
                             child: Center(child : Text("${qustions[qindex]["qstring"]}" , style:
-                            TextStyle(fontSize: MediaQuery.of(context).size.width / 20  ,fontWeight: FontWeight.bold ,color: Colors.white ),textAlign: TextAlign.center,),
+                            TextStyle(fontSize:20  ,fontWeight: FontWeight.bold ,color: Colors.white ),textAlign: TextAlign.center,),
                             ),
                           )
                         ],
@@ -199,7 +202,7 @@ class _ButtonsscreenState extends State<Buttonsscreen> {
                           ],
                         ),
                         child: Center(child : Text("${qustions[qindex]["qstring"]}" , style:
-                        TextStyle(fontSize: MediaQuery.of(context).size.width / 20  ,fontWeight: FontWeight.bold ,color: Colors.white ),textAlign: TextAlign.center,),
+                        TextStyle(fontSize:20  ,fontWeight: FontWeight.bold ,color: Colors.white ),textAlign: TextAlign.center,),
                         ),
                       )
 
