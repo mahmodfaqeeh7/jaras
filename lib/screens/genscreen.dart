@@ -3,6 +3,8 @@ import 'package:quiz_view/quiz_view.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:footballquiz/sharedpref.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class genscreen extends StatefulWidget {
   const genscreen({Key? key}) : super(key: key);
@@ -12,6 +14,8 @@ class genscreen extends StatefulWidget {
 }
 
 class _genscreenState extends State<genscreen> {
+
+  var  coins = CacheHelper.getData(key: "coin") ;
 
   List qustions = [];
 
@@ -29,9 +33,10 @@ class _genscreenState extends State<genscreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    readJson();
-  }
+     readJson();
 
+  }
+  bool holdanswer = false ;
   int qindex = 0;
   bool btn1 = true;
 
@@ -57,12 +62,21 @@ class _genscreenState extends State<genscreen> {
               .size
               .width * 0.5,
           onPressed: () {
+
             setState(() {
+
               if (btn1) {
                 btn2 = false;
-
                 isvisQ = !isvisQ;
               }
+              holdanswer = true ;
+
+              Timer timer = Timer(Duration(seconds: 1), () {
+                setState(() {
+                  holdanswer = false;
+                });
+              });
+
             });
             // Navigator.of(context).push(
             //   MaterialPageRoute(
@@ -88,11 +102,19 @@ class _genscreenState extends State<genscreen> {
               .width * 0.5,
           onPressed: () {
             setState(() {
+
               if (btn2) {
                 btn1 = false;
 
                 isvisQ = !isvisQ;
               }
+              holdanswer = true ;
+
+             Timer timer = Timer(Duration(seconds: 1), () {
+                setState(() {
+                  holdanswer = false;
+                });
+              });
             });
 
 
@@ -125,8 +147,16 @@ class _genscreenState extends State<genscreen> {
                         .size
                         .height / 2,
                     //  width: MediaQuery.of(context).size.width / 2,
-                    color: Colors.red[900],
-                    child: Center(
+                   decoration: BoxDecoration(
+                     gradient: LinearGradient(
+                         colors: [Colors.redAccent.shade700,Colors.red.shade900],
+                         begin: Alignment.bottomCenter,
+                         end: Alignment.topCenter
+
+                     ),
+
+                   ),
+                   child: Center(
 
                       child: Column(
                         children: [
@@ -172,8 +202,15 @@ class _genscreenState extends State<genscreen> {
                       .size
                       .height / 2,
                   //  width: MediaQuery.of(context).size.width / 2,
-                  color: Colors.green[600],
-                  child: Center(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.greenAccent.shade700,Colors.green.shade900],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter
+
+                    ),
+
+                  ),                       child: Center(
                     child: Column(children: [
                       SizedBox(height: (MediaQuery.of(context).size.height / 2)*0.15,),
                       Text("$player2score" , style: TextStyle(
@@ -216,11 +253,27 @@ class _genscreenState extends State<genscreen> {
 
             ),
             vide(),
-            btn1 ? QuistionContainer(
-                Colors.redAccent.shade400, player1score, player2score) :
+            btn1 ?  RotatedBox(quarterTurns: 2,
+                child :QuistionContainer(
+                Colors.redAccent.shade400, player1score, player2score)):
             QuistionContainer(
                 Colors.green.shade900, player2score, player1score),
 
+           Visibility(
+               visible: holdanswer,
+               child:Center(child:Container(
+                 height: MediaQuery.of(context).size.height * 0.95,
+                 width: MediaQuery.of(context).size.width * 0.95,
+                 decoration: BoxDecoration(
+                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                     gradient: LinearGradient(
+                         colors: [Colors.red.shade900,Colors.green.shade900],
+                         begin: Alignment.bottomCenter,
+                         end: Alignment.topCenter
+                     )
+                 ),
+               ) ,)
+           ) ,
 
            if(player1score ==10 || player2score ==10)
             Victorylose()
@@ -241,7 +294,12 @@ class _genscreenState extends State<genscreen> {
             padding: EdgeInsets.all(20),
             margin: EdgeInsets.all(50),
             decoration: BoxDecoration(
-              color: Colors.blueGrey.shade500,
+              gradient: LinearGradient(
+                  colors: [Colors.red.shade900,Colors.green.shade900],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter
+
+              ),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
@@ -301,46 +359,56 @@ class _genscreenState extends State<genscreen> {
             width: MediaQuery
                 .of(context)
                 .size
-                .width * 0.90,
+                .width * 0.95,
             height: MediaQuery
                 .of(context)
                 .size
-                .height * 0.70,
+                .height * 0.95,
            // question: "${qustions[qindex]["qstring"]}",
             rightAnswer: "${qustions[qindex]["rightanswer"]}",
             wrongAnswers: qustions[qindex]["wronganswers"],
             onRightAnswer: () {
-              if (btn1) {
-                player1score = player1score + 1;
-              }
-              if (btn2) {
-                player2score = player2score + 1;
-              }
-              setState(() {
-                isvisQ = false;
-                btn1 = true;
-                btn2 = true;
 
-                print("my score is : $player1score ");
-                print("enemysocre is : $player2score  ");
+              Timer timer = Timer(Duration(seconds: 1), () {
+                if (btn1) {
+                  player1score = player1score + 1;
+                }
+                if (btn2) {
+                  player2score = player2score + 1;
+                }
+                setState(() {
+
+                  isvisQ = false;
+                  btn1 = true;
+                  btn2 = true;
+
+                  print("my score is : $player1score ");
+                  print("enemysocre is : $player2score  ");
+                });
+                // }
+
+                qindex++;
+                if (qindex >= qustions.length) {
+                  qindex = 0;
+                }
               });
-              // }
 
-              qindex++;
-              if (qindex >= qustions.length) {
-                qindex = 0;
-              }
 
               //isvisQ = !isvisQ;
             },
             onWrongAnswer: () {
+            Timer timer = Timer(Duration(seconds: 1), () {
+
               if (btn1) {
                 player2score = player2score + 1;
+
+
               }
               if (btn2) {
                 player1score = player1score + 1;
               }
               setState(() {
+
                 isvisQ = false;
                 btn1 = true;
                 btn2 = true;
@@ -352,6 +420,12 @@ class _genscreenState extends State<genscreen> {
               if (qindex >= qustions.length) {
                 qindex = 0;
               }
+
+
+
+            });
+
+
               // isvisQ = !isvisQ;
             },
           ),
@@ -364,72 +438,158 @@ class _genscreenState extends State<genscreen> {
 
   }
 
-  Widget Victorylose()
-  {
+  Widget Victorylose() {
+
+
     return
       Stack(
         children: [
-        Container(
-        width: double.infinity,
-        height: double.maxFinite,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/vic.jpg"),
-            fit : BoxFit.cover ,
+          Container(
+            width: double.infinity,
+            height: double.maxFinite,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/vic.jpg"),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-        ),
-      ),
 
-         Center(child :Column(
-           children: [
-             SizedBox(height: MediaQuery.of(context).size.height *0.3,),
-             Container(
-                 margin: EdgeInsets.all(8),padding: EdgeInsets.all(8),
-                 width: MediaQuery.of(context).size.width *0.85,
-                 height: MediaQuery.of(context).size.height *0.15,
-                 decoration: BoxDecoration(
-                   color: player2score == 10 ? Colors.teal : Colors.pink[900],
-                   borderRadius: BorderRadius.circular(20),
-                   boxShadow: [
-                     BoxShadow(
-                       color: Colors.black45,
-                       blurRadius: 4,
-                       offset: Offset(4, 8), // Shadow position
-                     ),
-                   ],
-                 ),
-                 child: player1score == 10 ?
-                 Center(child : Text("الاحمر أنتصر , مبرووك" , style:
-                 TextStyle(
-                     fontSize: 20 ,fontWeight: FontWeight.bold ,color: Colors.white ),
-                   textAlign: TextAlign.center,) ):
-                 Center(child :Text("الاخضر أنتصر , مبرووك" , style:
-                 TextStyle(fontSize: 20 ,fontWeight: FontWeight.bold ,color: Colors.white ),
-                   textAlign: TextAlign.center,),)
+          Center(child: Column(
+            children: [
+              SizedBox(height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.3,),
+              Container(
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(8),
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.85,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.4,
+                  decoration: BoxDecoration(
+                    color: player2score == 10 ? Colors.teal : Colors.pink[900],
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black45,
+                        blurRadius: 4,
+                        offset: Offset(4, 8), // Shadow position
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                      children: [
+                        SizedBox(height: 30,),
 
-             ),
-             SizedBox(height: MediaQuery.of(context).size.height *0.03,),
-             ElevatedButton(
-                 onPressed:
-                 Navigator.of(context).pop, child:  Text(
-                 "اعادة اللعبة",
-                 textAlign: TextAlign.center,
-                 style: TextStyle(
-                     fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)
+                        player1score == 10 ?
+                      Center(child: Text(" COINS+10 \nالاحمر أنتصر , مبرووك", style:
+                      TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                      textAlign: TextAlign.center,)) :
+                      Center(child: Text(" الاخضر أنتصر , مبرووك COINS+10 \n", style:
+                      TextStyle(fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                      textAlign: TextAlign.center,),
+
+                         ),
+                        SizedBox(height: 30,),
+
+                        Center(child : Material(
+                          elevation: 3,
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.blue.shade900,
+
+                          child: MaterialButton(
+                              padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                              minWidth: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * 0.25,
+                              onPressed: () {
+
+                                setState(()  {
+                                  coins = coins + 10 ;
+                                  CacheHelper.saveData(key: "coin", value: coins);
+                                  Navigator.pop(context);
+
+                                });
+                              },
+
+                              child: Text(
+                                "اعادة اللعبه",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                              )
+
+                          ),
+                        ),
+
+                        ),
+                        SizedBox(height: 30,),
 
 
-             ))
+                      ],
+                      )
 
-           ],
+              ),
+              Center(child : Material(
+                elevation: 3,
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.green.shade800,
 
-         ),
-         )
+                child: MaterialButton(
+                    padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                    minWidth: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.25,
+                    onPressed: () {
+
+                      setState(()  {
+                        coins = coins + 20 ;
+                        CacheHelper.saveData(key: "coin", value: coins);
+                        Navigator.pop(context);
+
+                      });
+                    },
+
+                    child: Text(
+                      "AD : x2 COINS",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                    )
+
+                ),
+              ),
+              ),
+              SizedBox(height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.03,),
+
+              SizedBox(height: 10,),
+
+            ],
+
+          ),
+          )
         ],
 
       );
-
   }
+
 
 }
 

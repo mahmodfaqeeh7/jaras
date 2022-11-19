@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import 'screens/startscreen.dart';
-void main() {
+import 'package:footballquiz/sharedpref.dart';
+import 'screens/Gamescreen.dart';
+import 'screens/modeselection.dart';
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CacheHelper.init();
   runApp(const MyApp());
 }
 
@@ -15,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
 
       ),
-      home: Startscreen(),
+      home: modeselect(),
     );
   }
 }
